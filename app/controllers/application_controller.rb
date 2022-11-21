@@ -17,16 +17,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def editer_user
-
-  end
-
-  def auther_user
-    if current_user.id!=params[:id]
-      redirect_to user_path(current_user.id)
-    end
-  end
-
   protected
 
   def configure_permitted_parameters
