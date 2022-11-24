@@ -13,6 +13,7 @@ class BooksController < ApplicationController
     @book = Book.new
     @book_show = Book.find(params[:id]) # 登録書籍の詳細情報を含む変数
     @user = @book_show.user
+    @book_comment = BookComment.new
   end
 
   def edit

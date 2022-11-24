@@ -28,10 +28,66 @@
               <td><%= link_to "Edit", edit_book_path(@book_show.id), class:"btn btn-sm btn-success" %></td>
               <td><%= link_to "Destroy", book_path(@book_show.id), method: :delete, class:"btn btn-sm btn-danger", "data-confirm" => "Are you sure?" %></td>
             <% end %>
+            <td>
+              <% if @book_show.favorited_by?(current_user) %>
+                <%= link_to book_favorites_path(@book_show), method: :delete do %>
+                    <i class="fa-solid fa-heart", style="color:red;"></i><%= @book_show.favorites.count %>
+                <% end %>
+              
+              <% else %>
+                  <%= link_to book_favorites_path(@book_show), method: :post do %>
+                    <i class="fa-solid fa-heart"></i><%= @book_show.favorites.count %>
+                  <% end %>
+              <% end %>
+            </td>
+            <td>
+              <p>コメント件数：<%= @book_show.book_comments.count %></p>
+            </td>
+
           </tr>
+
         </tbody>
       </table>
+      <div>
+        <% @book_show.book_comments.each do |book_comment| %>
+        <table>
+          <body>
+            <tr>
+              <td>
+                <%= image_tag book_comment.user.get_profile_image(100,100) %><br>
+                <%= book_comment.user.name %>
+              </td>
+              <td>
+                <p><%= book_comment.comment %><p>
+              </td>
+              <td>
+                <% if book_comment.user == current_user %>
+                  <%= link_to "Destroy", book_book_comment_path(book_comment.book, book_comment), method: :delete, class:"btn btn-sm btn-danger", "data-confirm" => "Are you sure?" %>
+                <% end %>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <% end %>
+      </div>
+      <% if @book_show.errors.any? %>
+        <ul class="alert alert-danger" role="alert">
+          <h6 class="alert-heading">
+            <%= @book_show.errors.count %>件のエラーが発生しました
+          </h6>
+          <% @book_show.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      <% end %>
+      <div>
+        <%= form_with model: [@book_show, @book_comment] do |f| %>
+          <%= f.text_area :comment, rows: '5', placeholder: "コメントをここに" %>
+          <%= f.submit "送信する" %>
+        <% end %>
+      </div>
     </div>
+
 
   </div>
 </div>
